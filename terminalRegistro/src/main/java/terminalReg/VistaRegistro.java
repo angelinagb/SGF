@@ -1,5 +1,4 @@
 package main.java.terminalReg;
-
 import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -46,6 +45,7 @@ public class VistaRegistro extends JFrame {
     private JButton btnBorrar;
     private JLabel lblBienvenida2;
     private JPanel panel_1;
+    private JPanel panel_2;
 
     /**
      * Launch the application.
@@ -114,7 +114,7 @@ public class VistaRegistro extends JFrame {
     public VistaRegistro() {
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setBounds(100, 100, 641, 360);
+        setBounds(100, 100, 1212, 764);
 
    
 
@@ -145,14 +145,14 @@ public class VistaRegistro extends JFrame {
         this.panelSaludo.setLayout(new GridLayout(0, 1, 0, 0));
 
         this.lblBienvenida = new JLabel("¡Bienvenido!");
-        this.lblBienvenida.setFont(new Font("Segoe UI", Font.BOLD, 30));
+        this.lblBienvenida.setFont(new Font("Segoe UI", Font.BOLD, 65));
         this.lblBienvenida.setHorizontalAlignment(SwingConstants.CENTER);
         this.panelSaludo.add(this.lblBienvenida);
         this.panelSaludo.setPreferredSize(new Dimension(100, 50));
 
         this.lblBienvenida2 = new JLabel("Ingrese su DNI para registrarse");
         this.lblBienvenida2.setHorizontalAlignment(SwingConstants.CENTER);
-        this.lblBienvenida2.setFont(new Font("Segoe UI", Font.PLAIN, 19));
+        this.lblBienvenida2.setFont(new Font("Segoe UI", Font.PLAIN, 30));
         this.panelSaludo.add(this.lblBienvenida2);
 
         this.panel_1 = new JPanel();
@@ -160,7 +160,7 @@ public class VistaRegistro extends JFrame {
 
         this.textDNI = new JTextField();
         this.panel_1.add(this.textDNI);
-        this.textDNI.setFont(new Font("Segoe UI", Font.BOLD, 26));
+        this.textDNI.setFont(new Font("Segoe UI", Font.BOLD, 40));
         this.textDNI.setPreferredSize(new Dimension(200, 50));
         this.textDNI.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
         this.textDNI.setHorizontalAlignment(SwingConstants.CENTER);
@@ -211,8 +211,11 @@ public class VistaRegistro extends JFrame {
 
         this.btnBorrar = new JButton("←");
         this.panelTeclado.add(this.btnBorrar);
+        
+        this.panel_2 = new JPanel();
+        this.panelCentral.add(this.panel_2, BorderLayout.SOUTH);
 
-        Font fuenteBoton = new Font("Segoe UI", Font.BOLD, 18);
+        Font fuenteBoton = new Font("Segoe UI", Font.BOLD, 40);
 
         JButton[] botones = {
             btnUno, btnDos, btnTres,
