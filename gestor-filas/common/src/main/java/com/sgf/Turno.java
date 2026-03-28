@@ -1,14 +1,14 @@
 package com.sgf;
 
 import java.io.Serializable;
-//import java.time.LocalDateTime;
+//import java.time.LocalDateTime; // Lo comento para usar en otras iteraciones
 //import java.time.format.DateTimeFormatter;
 
 /**
  * Representa un Turno en el sistema.
  */
 public class Turno implements Serializable {
-
+    private static final long serialVersionUID = 1L; //Para asegurar la compatibilidad durante la serializacion y deserializacion
     private String dniCliente;
     //private LocalDateTime horario;
 
