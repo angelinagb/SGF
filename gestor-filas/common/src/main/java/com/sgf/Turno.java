@@ -1,4 +1,4 @@
-package com.sgf; // Coincidiendo con tu estructura de carpetas
+package com.sgf;
 
 import java.io.Serializable;
 //import java.time.LocalDateTime;
@@ -8,7 +8,6 @@ import java.io.Serializable;
  * Representa un Turno en el sistema.
  */
 public class Turno implements Serializable {
-    private static final long serialVersionUID = 1L;
 
     private String dniCliente;
     //private LocalDateTime horario;
