@@ -16,6 +16,8 @@ public class Main {
         }
       
         VentanaTerminalRegistro ventana = new VentanaTerminalRegistro(cliente);
+        ControladorRegistro controlador = new ControladorRegistro(ventana, cliente);
+        ventana.setControlador(controlador);
         ventana.setVisible(true);
 
         System.out.println("Ventana creada");

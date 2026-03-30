@@ -47,11 +47,23 @@ public class VentanaTerminalRegistro extends JFrame {
     private JPanel panel_1;
     private JPanel panel_2;
     private JButton btnLimpiar;
+    
+    private ControladorRegistro controlador;
 
+    public void setControlador(ControladorRegistro controlador) {
+        this.controlador = controlador;
+        
+        configurarBotones();
+        btnBorrar.addActionListener(e ->controlador.borrarUltimo());
+        btnLimpiar.addActionListener(e-> controlador.limpiar());
+        btnIngresar.addActionListener(e -> controlador.ingresarDNI());
+    }
+    public String getDNI() {
+    return textDNI.getText();
+    }
 
-
-    private void escribirNumero(String numero) {  // funcion que escribe el numero en el text field
-        this.textDNI.setText(this.textDNI.getText() + numero);
+    public void setDNI(String dni) {
+    textDNI.setText(dni);
     }
 
     private void configurarBotones() {    // define la funcion de cada boton numerico
@@ -64,26 +76,13 @@ public class VentanaTerminalRegistro extends JFrame {
 
         for (JButton btn : botones) {
             btn.addActionListener(e -> {
-                escribirNumero(btn.getText());
+                controlador.escribirNumero(btn.getText());
             });
         }
     }
 
-    private void borrarUltimo() {  // funcion boton borrar
-        String texto = textDNI.getText().trim();
-
-        if (texto.length() > 0) {
-            textDNI.setText(texto.substring(0, texto.length() - 1));
-        }
-    }
-
-    private boolean validarDNI(String dni) {  // se fija si el dni tiene una longitud valida
-
-        if (dni.length() < 7 || dni.length() > 8) {
-            return false;
-        }
-
-        return true; // no chequeo que sean numeros porque solo se pueden ingresar por pantalla
+    public void mostrarMensaje(String mensaje) {
+     JOptionPane.showMessageDialog(this, mensaje);
     }
 
   
@@ -220,25 +219,9 @@ public class VentanaTerminalRegistro extends JFrame {
             b.setForeground(fondo.brighter());
         }
 
-        configurarBotones();
+       
 
-        btnBorrar.addActionListener(e -> borrarUltimo());
 
-        btnLimpiar.addActionListener(e-> textDNI.setText(""));
-        
-        btnIngresar.addActionListener(e -> {
-        	String dni = textDNI.getText();
-            if (validarDNI(dni)) {
-                
-                Turno t = new Turno(dni);
-                cliente.enviarTurno(t); // Se envía al servidor
-
-                JOptionPane.showMessageDialog( this, "¡Ingreso válido! DNI: " + textDNI.getText() );
-                 textDNI.setText("");
-
-            } else {
-                JOptionPane.showMessageDialog(  this,"Ingrese un DNI válido");
-            }
-        });
     }
+    
 }
