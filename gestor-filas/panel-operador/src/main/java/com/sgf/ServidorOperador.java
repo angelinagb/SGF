@@ -5,6 +5,8 @@ import java.net.BindException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.io.IOException;
+import javax.swing.SwingUtilities;
+import com.sgf.excepciones.SGFException;
 
 public class ServidorOperador implements Runnable {
 
@@ -35,7 +37,10 @@ public class ServidorOperador implements Runnable {
                         Turno turno = (Turno) in.readObject();
 
                         logica.agregarTurno(turno);
-                        ventana.actualizarVista();//segun la IA esto puede causar error y tiene que ser ejecutado por fuera del hilo 
+                        
+                        SwingUtilities.invokeLater(() -> {
+                            ventana.actualizarVista();
+                        });
 
                         System.out.println("En cola: " + logica.getCantidadEnEspera());
 
