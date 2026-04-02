@@ -1,6 +1,6 @@
 package com.sgf;
 
-
+import com.sgf.excepciones.DniInvalidoException;
 
 public class ControladorRegistro {
     private VentanaTerminalRegistro vista;
@@ -13,7 +13,11 @@ public class ControladorRegistro {
 
     public void escribirNumero(String numero) {  // funcion que escribe el numero en el text field
         String dniActual = vista.getDNI();
-        vista.setDNI(dniActual + numero);
+
+        // limitamos a 8 dígitos para evitar ingresos excesivos
+        if (dniActual.length() < 8) {
+            vista.setDNI(dniActual + numero);
+        }
     }
 
     public void borrarUltimo() {  // funcion boton borrar
@@ -24,28 +28,29 @@ public class ControladorRegistro {
         }
     }
 
-    public boolean validarDNI(String dni) {  // se fija si el dni tiene una longitud valida
-
+    private void validarDNI(String dni) throws DniInvalidoException {
         if (dni.length() < 7 || dni.length() > 8) {
-            return false;
+            throw new DniInvalidoException(dni);
         }
-
-        return true; // no chequeo que sean numeros porque solo se pueden ingresar por pantalla
     }
+
 
     public void ingresarDNI() {
         String dni = vista.getDNI();
-            if (validarDNI(dni)) {
-                
-                Turno t = new Turno(dni);
-                cliente.enviarTurno(t); // Se envía al servidor
+            try {
+            validarDNI(dni);
+            
+            Turno t = new Turno(dni); //si validó, creo el turno y lo envío al servidor
+            cliente.enviarTurno(t); 
 
-                vista.mostrarMensaje("¡Ingreso válido! DNI: " + vista.getDNI());
-                vista.setDNI("");
+            vista.mostrarMensaje("¡Turno Registrado!\nDocumento: " + dni);
+            vista.setDNI("");
 
-            } else {
-                vista.mostrarMensaje("Ingrese un DNI válido");
-            }
+        } catch (DniInvalidoException e) {
+            vista.mostrarMensaje(e.getMessage());
+        } catch (Exception e) {
+            vista.mostrarMensaje("Error de conexión: No se pudo enviar el turno.");
+        }
         
     }
 

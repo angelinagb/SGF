@@ -82,14 +82,13 @@ public class VentanaTerminalRegistro extends JFrame {
     }
 
     public void mostrarMensaje(String mensaje) {
-     JOptionPane.showMessageDialog(this, mensaje);
+        JOptionPane.showMessageDialog(this, mensaje);
     }
 
-  
     public VentanaTerminalRegistro(ClienteSocket cliente) {
-
+        setTitle("Terminal de Registro");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setBounds(100, 100, 1212, 764);
+        setMinimumSize(new Dimension(800, 600));
 
         Color fondo = new Color(15, 23, 42);
 
@@ -125,14 +124,15 @@ public class VentanaTerminalRegistro extends JFrame {
         this.panelSaludo.setBackground(fondo);
 
         this.lblBienvenida = new JLabel("¡Bienvenido!");
-        this.lblBienvenida.setFont(new Font("Segoe UI", Font.BOLD, 65));
+        this.lblBienvenida.setFont(new Font("Segoe UI", Font.BOLD, 60));
         this.lblBienvenida.setHorizontalAlignment(SwingConstants.CENTER);
         this.panelSaludo.add(this.lblBienvenida);
         this.panelSaludo.setPreferredSize(new Dimension(100, 50));
+        this.lblBienvenida.setForeground(Color.WHITE);
 
         this.lblBienvenida2 = new JLabel("Ingrese su DNI para registrarse");
         this.lblBienvenida2.setHorizontalAlignment(SwingConstants.CENTER);
-        this.lblBienvenida2.setFont(new Font("Segoe UI", Font.PLAIN, 30));
+        this.lblBienvenida2.setFont(new Font("Segoe UI", Font.PLAIN, 28));
         this.panelSaludo.add(this.lblBienvenida2);
 
         this.lblBienvenida.setForeground(Color.WHITE);
@@ -218,8 +218,6 @@ public class VentanaTerminalRegistro extends JFrame {
             b.setBackground(fondo);
             b.setForeground(fondo.brighter());
         }
-
-       
 
 
     }

@@ -1,6 +1,6 @@
 package com.sgf;
 
-public class Main {
+public class MainOperador {
     public static void main(String[] args) {
 
         int PUERTO = Constantes.PUERTO_OPERADOR1;
