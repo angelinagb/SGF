@@ -1,21 +1,9 @@
 package com.sgf;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import javax.swing.JTextField;
-import javax.swing.JButton;
-
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import java.awt.GridLayout;
-import javax.swing.SwingConstants;
-import javax.swing.BorderFactory;
-
-import java.awt.Font;
+import javax.swing.border.LineBorder;
+import java.awt.*;
 
 public class VentanaTerminalRegistro extends JFrame {
 
@@ -50,6 +38,10 @@ public class VentanaTerminalRegistro extends JFrame {
     
     private ControladorRegistro controlador;
 
+    private final Color COLOR_FONDO = new Color(15, 23, 42);
+    private final Color COLOR_BOTON = new Color(30, 41, 59);
+    private final Color COLOR_TEXTO_ACCENTO = new Color(96, 165, 250);
+    
     public void setControlador(ControladorRegistro controlador) {
         this.controlador = controlador;
         
@@ -58,12 +50,13 @@ public class VentanaTerminalRegistro extends JFrame {
         btnLimpiar.addActionListener(e-> controlador.limpiar());
         btnIngresar.addActionListener(e -> controlador.ingresarDNI());
     }
+
     public String getDNI() {
-    return textDNI.getText();
+        return textDNI.getText();
     }
 
     public void setDNI(String dni) {
-    textDNI.setText(dni);
+        textDNI.setText(dni);
     }
 
     private void configurarBotones() {    // define la funcion de cada boton numerico
@@ -90,77 +83,78 @@ public class VentanaTerminalRegistro extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setMinimumSize(new Dimension(800, 600));
 
-        Color fondo = new Color(15, 23, 42);
+        initComponents();
+    }
 
-        this.contentPane = new JPanel();
-        this.contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+    private void initComponents() {
+        this.contentPane = new JPanel(new GridBagLayout());
+        this.contentPane.setBackground(COLOR_FONDO);
+        this.contentPane.setBorder(new EmptyBorder(20, 20, 20, 20));
         setContentPane(this.contentPane);
-        this.contentPane.setLayout(new BorderLayout(0, 0));
-        this.contentPane.setBackground(fondo);
 
         this.panelCentral = new JPanel();
+        this.panelCentral.setLayout(new BorderLayout(30, 30));
+        this.panelCentral.setOpaque(false);
+        this.panelCentral.setPreferredSize(new Dimension(1000, 600)); // Tamaño base del diseño
         this.contentPane.add(this.panelCentral);
-        this.panelCentral.setLayout(new BorderLayout(0, 0));
-        this.panelCentral.setBackground(fondo);
 
         this.panelIngreso = new JPanel();
+        this.panelIngreso.setLayout(new GridLayout(0, 2, 40, 0));
+        this.panelIngreso.setOpaque(false);
         this.panelCentral.add(this.panelIngreso, BorderLayout.CENTER);
-        this.panelIngreso.setLayout(new GridLayout(0, 2, 0, 0));
-        this.panelIngreso.setBackground(fondo);
 
         this.panelTexto = new JPanel();
+        this.panelTexto.setLayout(new BorderLayout(0, 20));
+        this.panelTexto.setOpaque(false);
         this.panelIngreso.add(this.panelTexto);
-        this.panelTexto.setLayout(new BorderLayout(0, 0));
-        this.panelTexto.setBackground(fondo);
 
         this.panelDNI = new JPanel();
+        this.panelDNI.setLayout(new GridLayout(2, 1, 0, 20));
+        this.panelDNI.setOpaque(false);
         this.panelTexto.add(this.panelDNI, BorderLayout.CENTER);
-        this.panelDNI.setLayout(new GridLayout(2, 2, 0, 0));
-        this.panelDNI.setBackground(fondo);
 
         this.panelSaludo = new JPanel();
+        this.panelSaludo.setLayout(new GridLayout(0, 1, 0, 10));
+        this.panelSaludo.setOpaque(false);        
         this.panelDNI.add(this.panelSaludo);
-        this.panelSaludo.setLayout(new GridLayout(0, 1, 0, 0));
-        this.panelSaludo.setBackground(fondo);
 
         this.lblBienvenida = new JLabel("¡Bienvenido!");
         this.lblBienvenida.setFont(new Font("Segoe UI", Font.BOLD, 60));
         this.lblBienvenida.setHorizontalAlignment(SwingConstants.CENTER);
-        this.panelSaludo.add(this.lblBienvenida);
-        this.panelSaludo.setPreferredSize(new Dimension(100, 50));
         this.lblBienvenida.setForeground(Color.WHITE);
+        this.panelSaludo.add(this.lblBienvenida);
 
         this.lblBienvenida2 = new JLabel("Ingrese su DNI para registrarse");
         this.lblBienvenida2.setHorizontalAlignment(SwingConstants.CENTER);
-        this.lblBienvenida2.setFont(new Font("Segoe UI", Font.PLAIN, 28));
+        this.lblBienvenida2.setForeground(new Color(148, 163, 184));
+        this.lblBienvenida2.setFont(new Font("Segoe UI", Font.PLAIN, 24));
         this.panelSaludo.add(this.lblBienvenida2);
 
-        this.lblBienvenida.setForeground(Color.WHITE);
-        this.lblBienvenida2.setForeground(Color.LIGHT_GRAY);
-
-        this.panel_1 = new JPanel();
+        this.panel_1 = new JPanel(new GridBagLayout());
+        this.panel_1.setOpaque(false);
         this.panelDNI.add(this.panel_1);
-        this.panel_1.setBackground(fondo);
 
         this.textDNI = new JTextField();
-        this.panel_1.add(this.textDNI);
-        this.textDNI.setFont(new Font("Segoe UI", Font.BOLD, 40));
-        this.textDNI.setPreferredSize(new Dimension(200, 50));
-        this.textDNI.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
+        this.textDNI.setFont(new Font("Segoe UI", Font.BOLD, 48));
+        this.textDNI.setPreferredSize(new Dimension(350, 80));
         this.textDNI.setHorizontalAlignment(SwingConstants.CENTER);
-        this.textDNI.setColumns(10);
+        this.textDNI.setEditable(false);
+        this.textDNI.setBackground(Color.WHITE);
+        this.textDNI.setBorder(BorderFactory.createLineBorder(COLOR_TEXTO_ACCENTO, 2));
+        this.panel_1.add(this.textDNI);
 
-        this.panelBotonIngreso = new JPanel();
+        this.panelBotonIngreso = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        this.panelBotonIngreso.setOpaque(false);
         this.panelTexto.add(this.panelBotonIngreso, BorderLayout.SOUTH);
-        this.panelBotonIngreso.setBackground(fondo);
 
         this.btnIngresar = new JButton("Ingresar");
+        this.btnIngresar.setPreferredSize(new Dimension(300, 70));
         this.panelBotonIngreso.add(this.btnIngresar);
 
         this.panelTeclado = new JPanel();
         this.panelIngreso.add(this.panelTeclado);
-        this.panelTeclado.setLayout(new GridLayout(4, 3, 0, 0));
-        this.panelTeclado.setBackground(fondo);
+        this.panelTeclado.setLayout(new GridLayout(4, 3, 15, 15));
+        this.panelTeclado.setOpaque(false);
 
         this.btnUno = new JButton("1");
         this.panelTeclado.add(this.btnUno);
@@ -199,26 +193,34 @@ public class VentanaTerminalRegistro extends JFrame {
         this.panelTeclado.add(this.btnBorrar);
         
         this.panel_2 = new JPanel();
+        this.panel_2.setPreferredSize(new Dimension(0, 20));
+        this.panel_2.setOpaque(false);
         this.panelCentral.add(this.panel_2, BorderLayout.SOUTH);
-        this.panel_2.setBackground(getForeground());
-
-        Font fuenteBoton = new Font("Segoe UI", Font.BOLD, 40);
 
         JButton[] botones = {
             btnUno, btnDos, btnTres,
             btnCuatro, btnCinco, btnSeis,
             btnSiete, btnOcho, btnNueve,
-            btnCero, btnBorrar, btnIngresar, btnLimpiar
+            btnCero, btnBorrar, btnLimpiar
         };
 
+        Font fuenteNumeros = new Font("Segoe UI", Font.BOLD, 32);
+
         for (JButton b : botones) {
-            b.setFont(fuenteBoton);
+            b.setFont(fuenteNumeros);
             b.setFocusPainted(false);
-            b.setBorderPainted(false);
-            b.setBackground(fondo);
-            b.setForeground(fondo.brighter());
+            b.setBackground(COLOR_BOTON);
+            b.setForeground(COLOR_TEXTO_ACCENTO);
+            b.setBorder(BorderFactory.createLineBorder(new Color(51, 65, 85), 1));
         }
 
+        this.btnIngresar.setFont(new Font("Segoe UI", Font.BOLD, 28));
+        this.btnIngresar.setBackground(COLOR_TEXTO_ACCENTO);
+        this.btnIngresar.setForeground(COLOR_FONDO);
+        this.btnIngresar.setFocusPainted(false);
+        this.btnIngresar.setBorderPainted(false);
+        
+        this.btnLimpiar.setFont(new Font("Segoe UI", Font.BOLD, 18));
 
     }
     
