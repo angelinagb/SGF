@@ -10,15 +10,40 @@ import java.io.Serializable;
 public class Turno implements Serializable {
     private static final long serialVersionUID = 1L; //Para asegurar la compatibilidad durante la serializacion y deserializacion
     private String dniCliente;
+    private int idPuesto;
+    private int intentos;
+    private String estado; // "ESPERA", "LLAMADO","ATENDIDO"
     //private LocalDateTime horario;
 
     public Turno(String dniCliente) {
         this.dniCliente = dniCliente;
+        this.idPuesto = -1; // Indica que aún no se ha asignado un puesto
+        this.intentos = 0;
+        this.estado = "ESPERA";
+
         // this.horario = LocalDateTime.now();
     }
 
     public String getDniCliente() {
         return dniCliente;
+    }
+    public int getIdPuesto() {
+        return idPuesto;
+    }
+    public void setIdPuesto(int idPuesto) {
+        this.idPuesto = idPuesto;
+    }
+    public int getIntentos() {
+        return intentos;
+    }
+    public void incrementarIntentos() {
+        this.intentos++;
+    }
+    public String getEstado() {
+        return estado;
+    }
+    public void setEstado(String estado) {
+        this.estado = estado;
     }
 
     //public LocalDateTime getHorario() {

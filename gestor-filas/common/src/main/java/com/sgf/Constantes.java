@@ -9,4 +9,6 @@ public class Constantes {
     public static final String HOST_OPERADOR1 = "localhost";
     public static final String HOST_MONITOR1 = "localhost";
     public static final String HOST_TERMINAL1 = "localhost";
+    public static final int HOST_SERVIDOR_CENTRAL = 8000;
+    public static final int ID_PUESTO1 = 1;
 }
