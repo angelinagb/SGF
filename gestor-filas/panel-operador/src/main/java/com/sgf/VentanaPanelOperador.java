@@ -92,6 +92,8 @@ public class VentanaPanelOperador extends JFrame {
         btnLlamar.setPreferredSize(new Dimension(0, 80));
         btnLlamar.addActionListener(e -> {
             if (controlador != null) controlador.accionarLlamado();
+            reiniciarTIntento();
+            
         });
         btnReintentar = new JButton("Reintentar llamado");
         btnReintentar.setFont(new Font("Segoe UI", Font.BOLD, 24));
@@ -102,6 +104,7 @@ public class VentanaPanelOperador extends JFrame {
         btnReintentar.setEnabled(false);
         btnReintentar.addActionListener(e -> {
             if (controlador != null) controlador.accionarReintento();
+            reiniciarTIntento();
         });
         panelBotones.add(btnLlamar);
         panelBotones.add(btnReintentar);
@@ -110,11 +113,15 @@ public class VentanaPanelOperador extends JFrame {
     }
 
     private void timerIntentos(){
-            timer = new Timer(30000, e-> {
+        timer = new Timer(30000, e-> {
             btnReintentar.setEnabled(true);
             timer.stop();
         });
+    }
 
+    private void reiniciarTIntento(){
+        timer.restart();
+        btnReintentar.setEnabled(false);
     }
 
     public void setControlador(ControladorOperador controlador) {
@@ -150,15 +157,6 @@ public class VentanaPanelOperador extends JFrame {
     public void actualizarVista(Turno actual, List<Turno> cola) {
         lblActual.setText("Actual: " + (actual != null ? actual.getDniCliente() : "---"));
 
-        if (actual != null) {
-            btnReintentar.setEnabled(false);
-            timer.restart();
-        } else {
-            btnReintentar.setEnabled(false);
-            timer.stop();
-        }
-
-
         panelCola.removeAll();
         for (Turno t : cola) {
             panelCola.add(crearItemTurno(t.getDniCliente()));
@@ -171,4 +169,6 @@ public class VentanaPanelOperador extends JFrame {
     public void mostrarMensaje(String mensaje) {
         JOptionPane.showMessageDialog(this, mensaje, "Aviso del Sistema", JOptionPane.INFORMATION_MESSAGE);
     }
+
+  
 }

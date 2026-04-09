@@ -97,6 +97,7 @@ public class LogicaFila {
                 this.ultimoLlamado = t;
                 return t;
             } else {
+                actualizarHistorial(t);
                 turnosActuales.remove(idPuesto);
                 if (this.ultimoLlamado != null && this.ultimoLlamado.getIdPuesto() == idPuesto) {
                     this.ultimoLlamado = null;

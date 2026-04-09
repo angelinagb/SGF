@@ -29,7 +29,8 @@ public class ClienteOperador {
             
             if(respuesta instanceof Turno) {
                 return (Turno) respuesta;
-            } else {
+            } 
+             else {
                 System.err.println("Respuesta inesperada del servidor: " + respuesta);
                 return null;
             }
@@ -77,7 +78,9 @@ public class ClienteOperador {
             
             if(respuesta instanceof List) {
                 return (List<Turno>) respuesta;
-            } else {
+            } else if(respuesta==null) { //cola vacia
+                return Collections.emptyList();
+            }else{
                 System.err.println("Respuesta inesperada del servidor: " + respuesta);
                 return Collections.emptyList();
             }
@@ -101,7 +104,9 @@ public class ClienteOperador {
             
             if(respuesta instanceof Turno) {
                 return (Turno) respuesta;
-            } else {
+            } else if(respuesta==null){
+                return null; //no hay turno en ese puesto
+            } else{
                 System.err.println("Respuesta inesperada del servidor: " + respuesta);
                 return null;
             }
