@@ -36,7 +36,7 @@ public class ControladorRegistro {
 
         if (dni.startsWith("0")){
             //ej el dni 0123456 lo daba como valido
-            throw new DniInvalidoException("El DNI no puede comenzar con 0");
+            throw new DniInvalidoException(dni);
         }
     }
 

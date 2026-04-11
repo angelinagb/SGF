@@ -51,8 +51,8 @@ public class LogicaFila {
     }
 
     /**
-     * Lógica de llamado (utiliza Panel de Operador).
-     * Cada vez que se llama a alguien nuevo (de cualquier puesto), el que estaba en el monitor pasa al historial.
+     * Procesa el llamado de un nuevo cliente. 
+     * El cliente que ocupaba el monitor principal es desplazado al historial.
      * Lanza excepción si no hay nadie.
      */
     public synchronized Turno llamarSiguiente(int idPuesto) throws FilaVaciaException {
@@ -60,6 +60,7 @@ public class LogicaFila {
             throw new FilaVaciaException();
         }
 
+        // Si el monitor principal estaba ocupado, movemos ese turno al historial
         if (this.ultimoLlamado != null) {
             actualizarHistorial(this.ultimoLlamado);
         }
@@ -83,7 +84,7 @@ public class LogicaFila {
      */
     private void actualizarHistorial(Turno t) {
         
-        // Si el DNI ya existe en el historial, no hacemos nada (mantiene su posición vieja)
+        // Si el DNI ya existe en el historial, no se hace nada (mantiene su posición vieja)
         for (Turno h : historial) {
             if (h.getDniCliente().equals(t.getDniCliente())) {
                 return;
@@ -98,9 +99,8 @@ public class LogicaFila {
         }
     }
 
-    /** ESTO NO SE SI LO QUEREMOS ASÍ, PERO SIN ESTO CUANDO SE LLAMA A UN TURNO QUE YA ESTA EN HISTORIAL, APARECE 
-     * EN PANTALLA Y EN HISTORIAL
-     * Auxiliar para remover un DNI del historial cuando vuelve a ser llamado en grande.
+    /**
+     * Elimina un DNI del historial cuando vuelve a ser el llamado principal del monitor.
      */
     private void quitarDelHistorial(String dni) {
         Iterator<Turno> it = historial.iterator();
@@ -111,6 +111,10 @@ public class LogicaFila {
         }
     }
 
+    /**
+     * Gestiona el reintento de llamado. 
+     * Si el reintento desplaza visualmente a otro turno diferente, el anterior va al historial.
+     */
     public synchronized Turno reIntentarLlamado(int idPuesto) {
         Turno t = this.turnosActuales.get(idPuesto);
 
