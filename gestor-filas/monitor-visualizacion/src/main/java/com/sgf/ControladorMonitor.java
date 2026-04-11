@@ -10,31 +10,18 @@ import java.util.List;
 public class ControladorMonitor {
 
     private VentanaMonitorVisualizacion vista;
-    private List<Turno> historial;
-    private Turno turnoActual;
+   
 
     public ControladorMonitor(VentanaMonitorVisualizacion vista) {
         this.vista = vista;
-        this.historial = new ArrayList<>();
-        this.turnoActual = null;
+        
     }
 
     /**
      * Procesa el nuevo turno recibido
      */
-    public void procesarNuevoTurno(Turno nuevoTurno) {
-        if (nuevoTurno == null) return;
-
-        // Gestiona el historial
-        if (turnoActual != null) {
-            historial.add(0, turnoActual);
-            if (historial.size() > 4) {
-                historial.remove(4); 
-            }
-        }
-
-        this.turnoActual = nuevoTurno;
-
-        vista.actualizarPantalla(turnoActual, historial);
+  public void actualizarDesdeServidor(Turno turnoActual, List<Turno> historial) {
+    vista.actualizarPantalla(turnoActual, historial);
+        
     }
 }

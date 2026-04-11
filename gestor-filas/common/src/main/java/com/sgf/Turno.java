@@ -10,11 +10,17 @@ import java.io.Serializable;
 public class Turno implements Serializable {
     private static final long serialVersionUID = 1L; //Para asegurar la compatibilidad durante la serializacion y deserializacion
     private String dniCliente;
-    private int puestoAtencion;
+    private int idPuesto;
+    private int intentos;
+    private String estado; // "ESPERA", "LLAMADO","ATENDIDO"
     //private LocalDateTime horario;
 
     public Turno(String dniCliente) {
         this.dniCliente = dniCliente;
+        this.idPuesto = -1; // Indica que aún no se ha asignado un puesto
+        this.intentos = 0;
+        this.estado = "ESPERA";
+
         // this.horario = LocalDateTime.now();
     }
 
@@ -22,12 +28,37 @@ public class Turno implements Serializable {
         return dniCliente;
     }
     
-    public int getPuestoAtencion() {
-        return puestoAtencion;
+    public int getIdPuesto() {
+        return idPuesto;
+    }
+    public void setIdPuesto(int idPuesto) {
+        this.idPuesto = idPuesto;
+    }
+    public int getIntentos() {
+        return intentos;
+    }
+    public void incrementarIntentos() {
+        this.intentos++;
+    }
+    public String getEstado() {
+        return estado;
+    }
+    public void setEstado(String estado) {
+        this.estado = estado;
     }
 
-    public void setPuestoAtencion(int puestoAtencion) {
-        this.puestoAtencion = puestoAtencion;
+    @Override
+    public boolean equals(Object obj) {
+     if (this == obj) return true;
+     if (obj == null || getClass() != obj.getClass()) return false;
+         Turno other = (Turno) obj;
+    
+    return dniCliente != null && dniCliente.equals(other.dniCliente);
+    }
+
+    @Override
+    public int hashCode() {
+        return dniCliente != null ? dniCliente.hashCode() : 0;
     }
 
     //public LocalDateTime getHorario() {

@@ -15,7 +15,8 @@ public class MainMonitor {
             ventana.setVisible(true);
 
             // 3: El Servidor habla con el Controlador
-            new Thread(new ServidorMonitor(Constantes.PUERTO_MONITOR1, controlador)).start();
+            ClienteMonitor cliente = new ClienteMonitor(Constantes.HOST_SERVIDOR_CENTRAL, Constantes.PUERTO_SERVIDOR_CENTRAL, controlador);
+            new Thread(cliente).start();
             
             System.out.println("Monitor: Sistema ensamblado y listo.");
         });

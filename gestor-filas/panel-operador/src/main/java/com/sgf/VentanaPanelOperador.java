@@ -16,6 +16,10 @@ public class VentanaPanelOperador extends JFrame {
     private JLabel lblActual;
 
     private JButton btnLlamar;
+    private JButton btnReintentar;
+
+    private Timer timer; //reintento
+    private Timer timerPull; //actualizar vista
     private ControladorOperador controlador;
 
     private final Color COLOR_FONDO = new Color(15, 23, 42);
@@ -35,6 +39,8 @@ public class VentanaPanelOperador extends JFrame {
         setContentPane(contentPane);
 
         initUI();
+        timerIntentos();
+        iniciarPull();
     }
 
     private void initUI() {
@@ -74,6 +80,8 @@ public class VentanaPanelOperador extends JFrame {
         panelCentro.add(scroll, BorderLayout.CENTER);
 
         contentPane.add(panelCentro, BorderLayout.CENTER);
+        JPanel panelBotones = new JPanel(new GridLayout(1, 2, 10, 0)); // 1 fila, 2 columnas
+        panelBotones.setOpaque(false);
 
         // Botón llamar
         btnLlamar = new JButton("Llamar siguiente");
@@ -84,13 +92,48 @@ public class VentanaPanelOperador extends JFrame {
         btnLlamar.setPreferredSize(new Dimension(0, 80));
         btnLlamar.addActionListener(e -> {
             if (controlador != null) controlador.accionarLlamado();
+            reiniciarTIntento();
+            
         });
-        contentPane.add(btnLlamar, BorderLayout.SOUTH);
+        btnReintentar = new JButton("Reintentar llamado");
+        btnReintentar.setFont(new Font("Segoe UI", Font.BOLD, 24));
+        btnReintentar.setBackground(COLOR_ACCENTO);
+        btnReintentar.setForeground(COLOR_FONDO);
+        btnReintentar.setFocusPainted(false);
+        btnReintentar.setPreferredSize(new Dimension(0, 80));
+        btnReintentar.setEnabled(false);
+        btnReintentar.addActionListener(e -> {
+            if (controlador != null) controlador.accionarReintento();
+            reiniciarTIntento();
+        });
+        panelBotones.add(btnLlamar);
+        panelBotones.add(btnReintentar);
+        contentPane.add(panelBotones, BorderLayout.SOUTH);
 
+    }
+
+    private void timerIntentos(){
+        timer = new Timer(30000, e-> {
+            btnReintentar.setEnabled(true);
+            timer.stop();
+        });
+    }
+
+    private void reiniciarTIntento(){
+        timer.restart();
+        btnReintentar.setEnabled(false);
     }
 
     public void setControlador(ControladorOperador controlador) {
         this.controlador = controlador;
+    }
+    private void iniciarPull() {
+        this.timerPull = new Timer(2000, e -> { // cada 2 segundos
+        if (controlador != null) {
+            controlador.actualizarCola();
+        }
+    });
+    timerPull.start();
     }
 
     private JPanel crearItemTurno(String dni) {
@@ -126,4 +169,6 @@ public class VentanaPanelOperador extends JFrame {
     public void mostrarMensaje(String mensaje) {
         JOptionPane.showMessageDialog(this, mensaje, "Aviso del Sistema", JOptionPane.INFORMATION_MESSAGE);
     }
+
+  
 }
