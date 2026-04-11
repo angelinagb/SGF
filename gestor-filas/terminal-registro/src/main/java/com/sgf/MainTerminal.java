@@ -1,9 +1,18 @@
 package com.sgf;
 
+import javax.swing.SwingUtilities;
+
 public class MainTerminal {
     public static void main(String[] args) {
+        //ejemplo 
+        // java -cp "terminal-registro/target/classes;common/target/classes" com.sgf.MainTerminal 2
 
         System.out.println("Arrancando...");
+        // Identifica la terminal si se pasan argumentos
+        String idTerminal = "";
+        if (args.length > 0) {
+            idTerminal = " #" + args[0];
+        }
 
         ClienteTerminal cliente = new ClienteTerminal(Constantes.HOST_SERVIDOR_CENTRAL,Constantes.PUERTO_SERVIDOR_CENTRAL);
 
@@ -15,12 +24,18 @@ public class MainTerminal {
             e.printStackTrace();
         }
     
-        VentanaTerminalRegistro ventana = new VentanaTerminalRegistro(cliente);
-        ControladorRegistro controlador = new ControladorRegistro(ventana, cliente);
-        ventana.setControlador(controlador);
-        ventana.setVisible(true);
+        final String tituloFinal = "Terminal de Registro" + idTerminal;
 
-        System.out.println("Ventana creada");
+        SwingUtilities.invokeLater(() -> {
+            VentanaTerminalRegistro ventana = new VentanaTerminalRegistro(cliente);
+            ventana.setTitle(tituloFinal); // Seteamos el título con el ID
+            
+            ControladorRegistro controlador = new ControladorRegistro(ventana, cliente);
+            ventana.setControlador(controlador);
+            ventana.setVisible(true);
+            
+            System.out.println("Ventana creada: " + tituloFinal);
+        });
 
     }
 }
