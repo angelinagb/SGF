@@ -2,6 +2,7 @@ package com.sgf;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -68,6 +69,7 @@ public class LogicaFila {
         nuevo.setIdPuesto(idPuesto);
         nuevo.setEstado("LLAMADO");
         nuevo.incrementarIntentos(); //Primer intento
+
         this.ultimoLlamado = nuevo;
 
         turnosActuales.put(idPuesto, nuevo);
@@ -75,14 +77,37 @@ public class LogicaFila {
         return nuevo;
     }
 
+    /**
+     * Mueve un turno al historial de forma inteligente.
+     * Mantiene las últimas 4 posiciones y evita duplicados visuales.
+     */
     private void actualizarHistorial(Turno t) {
-        // Si es el mismo, evitamos duplicado en el historial
-        //Ya estaba siendo atendido, pero pasó a historial cuando se llamó a otro turno en otro puesto
-        if (!historial.isEmpty() && historial.get(0).equals(t)) return;
+        
+        // Si el DNI ya existe en el historial, no hacemos nada (mantiene su posición vieja)
+        for (Turno h : historial) {
+            if (h.getDniCliente().equals(t.getDniCliente())) {
+                return;
+            }
+        }
 
+        //Si no estaba, lo agregamos al inicio
         this.historial.add(0, t);
+
         if (this.historial.size() > 4) {
             this.historial.remove(4); //mantiene el máximo de 4 en el historial
+        }
+    }
+
+    /** ESTO NO SE SI LO QUEREMOS ASÍ, PERO SIN ESTO CUANDO SE LLAMA A UN TURNO QUE YA ESTA EN HISTORIAL, APARECE 
+     * EN PANTALLA Y EN HISTORIAL
+     * Auxiliar para remover un DNI del historial cuando vuelve a ser llamado en grande.
+     */
+    private void quitarDelHistorial(String dni) {
+        Iterator<Turno> it = historial.iterator();
+        while (it.hasNext()) {
+            if (it.next().getDniCliente().equals(dni)) {
+                it.remove();
+            }
         }
     }
 
@@ -99,13 +124,16 @@ public class LogicaFila {
                     actualizarHistorial(this.ultimoLlamado);
                 }
 
+                // Si el turno que estamos re-llamando estaba en el historial, lo sacamos de ahí
+                quitarDelHistorial(t.getDniCliente());
+
                 this.ultimoLlamado = t;
                 return t;
             } else {
                 // Si falla el 3er intento, el puesto queda libre y el turno va al historial
                 actualizarHistorial(t);
                 turnosActuales.remove(idPuesto);
-                if (this.ultimoLlamado != null && this.ultimoLlamado.getIdPuesto() == idPuesto) {
+                if (this.ultimoLlamado != null && this.ultimoLlamado.getDniCliente().equals(t.getDniCliente())) {
                     this.ultimoLlamado = null;
                 }
                 return null;
