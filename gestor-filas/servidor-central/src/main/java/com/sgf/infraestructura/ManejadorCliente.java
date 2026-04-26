@@ -13,10 +13,12 @@ import com.sgf.modelos.Turno;
 public class ManejadorCliente implements Runnable {
     private Socket socket;
     private ILogicaFila logica;
+    private ServidorCentral servidor;
 
-    public ManejadorCliente(Socket socket, ILogicaFila logica) {
+    public ManejadorCliente(Socket socket, ILogicaFila logica, ServidorCentral server) {
         this.socket = socket;
         this.logica = logica;
+        this.servidor = server;
     }
 
     @Override 
@@ -41,7 +43,8 @@ public class ManejadorCliente implements Runnable {
                     int idPuesto = (int) in.readObject();
                     try {
                         Turno llamado = logica.llamarSiguiente(idPuesto);
-                        out.writeObject(llamado);
+                        out.writeObject(llamado); // para el OP
+                        servidor.notificarMonitores(logica.getUltimoLlamado(), logica.getHistorial());
                     } catch (FilaVaciaException e) {
                         out.writeObject("ERROR_FILA_VACIA");
                     }
@@ -49,7 +52,8 @@ public class ManejadorCliente implements Runnable {
                 case "REINTENTAR_LLAMADO":
                     int id=(int)in.readObject();
                     Turno reIntento = logica.reintentarLlamado(id);
-                    out.writeObject(reIntento);
+                    out.writeObject(reIntento); // para el op
+                    servidor.notificarMonitores(logica.getUltimoLlamado(), logica.getHistorial());
                     break;
                 case "GET_ESTADO_MONITOR":
                     out.writeObject(logica.getUltimoLlamado());
@@ -62,6 +66,12 @@ public class ManejadorCliente implements Runnable {
                     int idPuesto2 = (int) in.readObject();
                     out.writeObject(logica.getTurnoPuesto(idPuesto2));
                     break;
+                case "SUSCRIBIR_MONITOR":
+                    servidor.agregarMonitor(out);
+
+                    while (true) {
+                        Thread.sleep(10000); // mantener viva la conexión
+    } //en el manejador
 
             }
             out.flush();
@@ -74,4 +84,6 @@ public class ManejadorCliente implements Runnable {
         }
     }
 
+
+    
 }
