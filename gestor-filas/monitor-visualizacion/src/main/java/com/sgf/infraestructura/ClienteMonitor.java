@@ -54,32 +54,24 @@ public class ClienteMonitor implements Runnable, IServicioMonitor {
 
 
     @Override
-    public void run() {
-        System.out.println("Cliente Monitor iniciado. Conectando a " + host + ":" + puerto);
-
-        while(activo){
-            try(Socket socket = new Socket(host,puerto);
-            
-            ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
-            ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
-
-            ){
-                out.writeObject("GET_ESTADO_MONITOR");
+        public void run() {
+            try (
+                Socket socket = new Socket(host, puerto);
+                ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+                ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
+            ) {
+                out.writeObject("SUSCRIBIR_MONITOR"); 
                 out.flush();
 
-                Turno turnoActual = (Turno) in.readObject();
-                List<Turno> historial = (List<Turno>) in.readObject();
-                controlador.actualizarDesdeServidor(turnoActual, historial);   
-            
-            }catch (Exception e){
-                System.err.println("Error de conexión: " + e.getMessage());
-            }
-            try {
-                Thread.sleep(1000); // Espera 1 segundo antes de intentar reconectar
-            } catch (InterruptedException e) {
-                System.err.println("Cliente Monitor interrumpido: " + e.getMessage());
+                while (true) {
+                    Turno actual = (Turno) in.readObject(); // Se duerme el hilo hasta que llegue algo
+                    List<Turno> historial = (List<Turno>) in.readObject();
+
+                    controlador.actualizarDesdeServidor(actual, historial);
+                }
+
+            } catch (Exception e) {
+                System.err.println("Monitor desconectado: " + e.getMessage());
             }
         }
-    }
-
 }

@@ -1,14 +1,25 @@
 package com.sgf.infraestructura;
 
+import java.io.ObjectOutputStream;
 import java.net.BindException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
 
 import com.sgf.aplicacion.ILogicaFila;
+import com.sgf.modelos.Turno;
 
 public class ServidorCentral implements Runnable{
     private int puerto;
     private ILogicaFila logica;
+    private List<ObjectOutputStream> monitores = Collections.synchronizedList(new ArrayList<>());
+    Map<Integer, ObjectOutputStream> operadores = new ConcurrentHashMap<>();
+
 
     public ServidorCentral(int puerto, ILogicaFila logica) {
         this.puerto = puerto;
@@ -22,7 +33,7 @@ public class ServidorCentral implements Runnable{
             while(true){
                 Socket socketCliente = server.accept();
                 
-                ManejadorCliente manejador = new ManejadorCliente(socketCliente, logica);
+                ManejadorCliente manejador = new ManejadorCliente(socketCliente, logica,this);
                 Thread hiloCliente = new Thread(manejador);
                 hiloCliente.setName("Hilo-Manejador-" + socketCliente.getInetAddress());
                 hiloCliente.start();
@@ -34,6 +45,43 @@ public class ServidorCentral implements Runnable{
             e.printStackTrace();
         }
     }
+    public void agregarMonitor(ObjectOutputStream out){
+        monitores.add(out);
+    }
 
 
-}
+    public void notificarMonitores(Turno actual, List<Turno> historial) {
+    synchronized (monitores) {
+        Iterator<ObjectOutputStream> it = monitores.iterator();
+
+        while (it.hasNext()) {
+            ObjectOutputStream out = it.next();
+            try {
+                out.writeObject(actual);
+                out.writeObject(historial);
+                out.flush();
+            } catch (Exception e) {
+                it.remove(); // cliente muerto
+            }
+        }}
+    }
+    
+    public void notificarOperadores() {
+        for (Map.Entry<Integer, ObjectOutputStream> entry : operadores.entrySet()) {
+        int id = entry.getKey();
+        ObjectOutputStream out = entry.getValue();
+
+        try {
+            Turno actual = logica.getTurnoPuesto(id);
+            List<Turno> cola = logica.getCola();
+
+            out.writeObject(actual);
+            out.writeObject(cola);
+            out.flush();
+
+        } catch (Exception e) {
+            operadores.remove(id);
+        }
+
+    }
+}}
