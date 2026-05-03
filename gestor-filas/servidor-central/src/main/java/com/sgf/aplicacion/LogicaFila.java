@@ -59,11 +59,18 @@ public class LogicaFila implements ILogicaFila{
      */
     @Override
     public synchronized Turno llamarSiguiente(int idPuesto) throws FilaVaciaException {
+        
         if (filaEspera.isEmpty()) {
             throw new FilaVaciaException();
         }
 
         // Si el monitor principal estaba ocupado, movemos ese turno al historial
+        Turno anterior = turnosActuales.get(idPuesto);
+        if (anterior != null) {
+            anterior.setEstado("ATENDIDO");
+            actualizarHistorial(anterior);
+        }
+
         if (this.ultimoLlamado != null) {
             actualizarHistorial(this.ultimoLlamado);
         }
@@ -104,6 +111,7 @@ public class LogicaFila implements ILogicaFila{
                 return t;
             } else {
                 // Si falla el 3er intento, el puesto queda libre y el turno va al historial
+                t.setEstado("AUSENTE");
                 actualizarHistorial(t);
                 turnosActuales.remove(idPuesto);
                 if (this.ultimoLlamado != null && this.ultimoLlamado.getDniCliente().equals(t.getDniCliente())) {

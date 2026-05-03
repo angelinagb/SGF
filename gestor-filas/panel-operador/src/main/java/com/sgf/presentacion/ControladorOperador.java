@@ -20,7 +20,7 @@ public class ControladorOperador {
         this.idPuesto = idPuesto;
     } 
 
-    public void accionarLlamado() {
+    public Turno accionarLlamado() {
         try {
             // Intentamos obtener el siguiente (Puede lanzar FilaVaciaException)
             Turno siguiente = servicio.llamarSiguiente(idPuesto);
@@ -29,11 +29,14 @@ public class ControladorOperador {
             // actualizamos la vista 
             SwingUtilities.invokeLater(() -> {
             vista.actualizarVista(siguiente, servicio.getCola()); 
+        
+            
         });
+        return siguiente;
 
-    
         } catch (Exception e) {
             vista.mostrarMensaje("Error al procesar el llamado: " + e.getMessage());
+            return null;
         }
     }
 

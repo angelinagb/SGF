@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+Created-By: Apache Maven 3.9.11
+Built-By: Angelina
+Build-Jdk: 21.0.9
+Main-Class: com.sgf.MainTerminal
+
